@@ -14,11 +14,11 @@ function HomeScreen({ navigation }) {
   const themeTextStyle = colorTheme === "light" ? styles.lightThemeText : styles.darkThemeText;
   const themeContainerStyle = colorTheme === "light" ? styles.lightContainer : styles.darkContainer;
   const themeButtonStyle = colorTheme === "light" ? styles.lightButton : styles.darkButton;
-
+// {colorTheme}
   return (
     <View style={[styles.container, themeContainerStyle]}>
       <Text style={[styles.text, themeTextStyle]}>
-        <Text>SushiGo {colorTheme}</Text>
+        <Text>SushiGo</Text>
       </Text>
       <Image source={{uri: 'https://cdn-icons-png.flaticon.com/512/174/174295.png'}}
        style={{width: 300, height: 300}} />
