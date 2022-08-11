@@ -7,5 +7,15 @@
       "website": "https://shabushabu.nl/",
       "latitude": "51.91743",
       "longitude": "4.47757"
+    },
+
+    {
+      "naam": "iYUMi",
+      "adres": " Coolsingel 143",
+      "postcode": "3012 AG Rotterdam",
+      "telefoon": "0104048639",
+      "website": "http://www.iyumi.nl/",
+      "latitude": "51.91833",
+      "longitude": "4.47985"
     }
   ]

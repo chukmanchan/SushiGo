@@ -1,16 +1,8 @@
 import * as React from "react";
 import MapView, { Callout, Marker } from "react-native-maps";
-import { StatusBar } from "expo-status-bar";
-import {
-  StyleSheet,
-  View,
-  Dimensions,
-  TouchableOpacity,
-  Text,
-} from "react-native";
+import { StyleSheet, View, Dimensions, TouchableOpacity, Appearance, useColorScheme } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
-import Menu from "../menu";
-import hotspots from "../hotspots.json";
+import Pins from "../Pins";
 
 function MapScreen() {
   const [isActive, setIsActive] = React.useState(false);
@@ -19,6 +11,10 @@ function MapScreen() {
     latitude: 0,
     longitude: 0,
   });
+
+  const colorTheme = useColorScheme()
+  const themeContainerStyle =
+    colorTheme === "light" ? styles.lightContainer : styles.darkContainer;
 
   React.useEffect(() => {
     async () => {
@@ -49,28 +45,34 @@ function MapScreen() {
           longitudeDelta: 0.0421,
         }}
         showsUserLocation={true}
+        followsUserLocation={true}
       >
+        {isActive ? <Pins></Pins> : null}
       </MapView>
-      {isActive ? (
-        <Callout>
-          <Menu></Menu>
-        </Callout>
-      ) : null}
       <Callout>
         <TouchableOpacity
-          style={styles.menuButton}
+          style={[styles.menuButton, themeContainerStyle]}
           onPress={() => {
             setIsActive(!isActive);
           }}
         >
           {isActive ? (
-            <Ionicons name={"close"} size={24} color={"#3D3D3D"}></Ionicons>
-          ) : (
+            colorTheme === "light" ? (
+              <Ionicons
+                name={"close"}
+                size={24}
+                color={"#3D3D3D"}
+              ></Ionicons>
+            ) : (
+              <Ionicons name={"close"} size={24} color={"#fff"}></Ionicons>
+            )
+          ) : colorTheme === "light" ? (
             <Ionicons name={"list"} size={24} color={"#3D3D3D"}></Ionicons>
+          ) : (
+            <Ionicons name={"list"} size={24} color={"#fff"}></Ionicons>
           )}
         </TouchableOpacity>
       </Callout>
-      <StatusBar style="dark" />
     </View>
   );
 }
@@ -87,10 +89,15 @@ const styles = StyleSheet.create({
     height: Dimensions.get("window").height,
   },
   menuButton: {
-    backgroundColor: "#fff",
     padding: 5,
     borderRadius: 10,
     margin: 10,
+  },
+  lightContainer: {
+    backgroundColor: "#fff",
+  },
+  darkContainer: {
+    backgroundColor: "#3D3D3D",
   },
 });
 
