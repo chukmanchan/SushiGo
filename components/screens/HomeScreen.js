@@ -1,78 +1,65 @@
-import * as React from "react";
-import { StyleSheet, Text, View, TouchableOpacity, Appearance, useColorScheme, Image } from "react-native";
-import Ionicons from "react-native-vector-icons/Ionicons";
+import React, { useContext } from "react";
+import { StyleSheet, Text, View, Image, Button } from "react-native";
+import themeContext from '../../config/themeContext';
 
-function HomeScreen({ navigation }) {
+const Home = ({ navigation }) => {
 
-  const colorTheme = useColorScheme()
+	// Loading theme
+	const theme = useContext(themeContext);
 
-  if (colorTheme === 'dark') {
-    
-  } else {
-    
-  }
-  const themeTextStyle = colorTheme === "light" ? styles.lightThemeText : styles.darkThemeText;
-  const themeContainerStyle = colorTheme === "light" ? styles.lightContainer : styles.darkContainer;
-  const themeButtonStyle = colorTheme === "light" ? styles.lightButton : styles.darkButton;
-// {colorTheme}
-  return (
-    <View style={[styles.container, themeContainerStyle]}>
-      <Text style={[styles.text, themeTextStyle]}>
-        <Text>SushiGo</Text>
-      </Text>
-      <Image source={{uri: 'https://cdn-icons-png.flaticon.com/512/174/174295.png'}}
-       style={{width: 300, height: 300}} />
-        
-      <TouchableOpacity
-        style={[styles.button, themeButtonStyle]}
-        onPress={() => navigation.navigate("Maps")}
-      >
-        {colorTheme === "light" ? (
-          <Ionicons name="walk-outline" size={36} color="#3D3D3D" />
-        ) : (
-          <Ionicons name="walk-outline" size={36} color="#fff" />
-        )}
-      </TouchableOpacity>
-    </View>
-  );
-}
+	return (
+		<View style={[ styles.container, {backgroundColor: theme.background }]}>
+			{/* Logo */}
+			<View style={styles.imageContainer}>
+				<Image
+					style={styles.logo}
+					source={require('../../assets/icon.png')}
+				/>
+			</View>
+			<View style={styles.contentHolder}>
+				{/* All text */}
+				<Text style={[styles.title,{ color: theme.color}]}>SushiGo</Text>
+				<Text style={[styles.text,{ color: theme.color}]}>Are you a tourist currently in Rotterdam and you want some sushi?</Text>
+				<Text style={[styles.text,{ color: theme.color}]}>This is the app dedicated to you, here you can find all Sushi places in Rotterdam</Text>
+				
+				{/* Button to map screen */}
+				<Button
+					title="Start looking"
+					color="#db4237"
+					onPress={() => {
+						navigation.navigate('Map');
+					}}
+				/>
+			</View>
+		</View>
+	);
+};
 
-// Styles
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  text: {
-    fontSize: 36,
-    width: 300,
-    textAlign: "center",
-  },
-  button: {
-    padding: 10,
-    borderRadius: 36,
-    margin: 20,
-    borderWidth: 2,
-  },
-  lightContainer: {
-    backgroundColor: "#fff",
-  },
-  darkContainer: {
-    backgroundColor: "#3D3D3D",
-  },
-  lightThemeText: {
-    color: "#3D3D3D",
-  },
-  darkThemeText: {
-    color: "#fff",
-  },
-  lightButton: {
-    borderColor: "#3D3D3D",
-  },
-  darkButton: {
-    borderColor: "#fff",
-  },
+	container: {
+		justifyContent: 'center',
+		alignItems: 'center',
+	},
+	imageContainer: {
+		marginTop: 75,
+	},
+	logo: {
+		width: 150,
+		height: 150,
+	},
+	contentHolder: {
+		width: "90%"
+	},
+	title: {
+		textAlign: "center",
+		fontSize: 24,
+		fontWeight: "bold",
+		marginTop: 20
+	},
+	text: {
+		textAlign: "center",
+		marginBottom: 20
+	}
 });
 
-export default HomeScreen;
+export default Home;

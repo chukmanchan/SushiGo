@@ -1,0 +1,81 @@
+[
+  {
+    "name": "Shabu Shabu",
+    "address": "Westblaak 82",
+    "zipcode": "3012 KM Rotterdam",
+    "telephone": "0104116533",
+    "website": "https://shabushabu.nl/",
+    "latitude": 51.91743,
+    "longitude": 4.47757
+  },
+
+  {
+    "name": "iYUMi",
+    "address": "Coolsingel 143",
+    "zipcode": "3012 AG Rotterdam",
+    "telephone": "0104048639",
+    "website": "http://www.iyumi.nl/",
+    "latitude": 51.91833,
+    "longitude": 4.47985
+  },
+
+  {
+    "name": "Sumo",
+    "address": "Mauritsweg 6",
+    "zipcode": "3012 LA Rotterdam",
+    "telephone": "0102410550",
+    "website": "https://restaurantsumo.com/store-locator/sumo-rotterdam-1/",
+    "latitude": 51.92071,
+    "longitude": 4.47232
+  },
+
+  {
+    "name": "Happy Sushi",
+    "address": "Kruisplein 42",
+    "zipcode": "3012 CC Rotterdam",
+    "telephone": "0103182801",
+    "website": "https://www.happysushi.eu/",
+    "latitude": 51.92170046677976,
+    "longitude": 4.472127970078846
+  },
+
+  {
+    "name": "MISO SUSHI PLAZA",
+    "address": "Plaza, 2",
+    "zipcode": "3012 CW Rotterdam",
+    "telephone": "0103161765",
+    "website": "http://www.misosushi.nl/",
+    "latitude": 51.92319,
+    "longitude": 4.47328
+  },
+
+  {
+    "name": "Suki",
+    "address": "Schiedamsedijk 85A",
+    "zipcode": "3011 EN Rotterdam",
+    "telephone": "0107371643",
+    "website": "http://www.suki.nu/",
+    "latitude": 51.91427,
+    "longitude": 4.48167
+  },
+
+  {
+    "name": "Sumo Markthal",
+    "address": "Verlengde Nieuwstraat 2-5",
+    "zipcode": "3011 GX Rotterdam",
+    "telephone": "0103070512",
+    "website": "http://restaurantsumo.com/rotterdam-markthallen/",
+    "latitude": 51.92032,
+    "longitude": 4.48792
+  },
+
+  {
+    "name": "Umi Sushi Ramen & Pokebowl",
+    "address": "Dominee Jan Scharpstraat 298, 28",
+    "zipcode": "3011 GZ Rotterdam",
+    "telephone": "Not available",
+    "website": "https://www.markthal.nl/markt-restaurants/umi-sushi",
+    "latitude": 51.92020,
+    "longitude": 4.48704
+  }
+]

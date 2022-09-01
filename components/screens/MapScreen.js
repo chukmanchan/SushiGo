@@ -1,104 +1,162 @@
-import * as React from "react";
-import MapView, { Callout, Marker } from "react-native-maps";
-import { StyleSheet, View, Dimensions, TouchableOpacity, Appearance, useColorScheme } from "react-native";
-import Ionicons from "react-native-vector-icons/Ionicons";
-import Pins from "../Pins";
+import React, { useState, useEffect } from "react";
+import { StyleSheet, Text, View, Dimensions, Image } from 'react-native'
+import MapView, {Callout, Marker} from 'react-native-maps';
+import * as Location from 'expo-location';
+import { useIsFocused } from "@react-navigation/native";
 
-function MapScreen() {
-  const [isActive, setIsActive] = React.useState(false);
+const Map  = ({ route, navigation }) => {
+	
+	// Current location of the user
+	const [currentLocation, setCurrentLocation] = useState({
+		latitude: 0,
+		longitude: 0,
+	});
 
-  const [currentLocation, setCurrentLocation] = React.useState({
-    latitude: 0,
-    longitude: 0,
-  });
+	// Sushi store data 
+	const [stores , setStores] = useState([]);
 
-  const colorTheme = useColorScheme()
-  const themeContainerStyle =
-    colorTheme === "light" ? styles.lightContainer : styles.darkContainer;
+	const isFocused = useIsFocused();
+    useEffect(() => {
+        // Call only when the screen is focused
+        if(isFocused){ 
+            getLocation();
+        }
+    }, [isFocused]);
 
-  React.useEffect(() => {
-    async () => {
-      let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== "granted") {
-        console.log("Permission to access location was denied");
-        return;
-      }
+	// Get current location
+	const getLocation = () => {
+		(async () => {
+			if(typeof route.params !== 'undefined'){
+				// Set location from params
+				setCurrentLocation({
+					latitude: Number(route.params.latitude),
+					longitude: Number(route.params.longitude)
+				});
+			} else {
+				let { status } = await Location.requestForegroundPermissionsAsync();
+				if (status !== 'granted') {
+					console.log('Permission to access location was denied');
+					return;
+				}
+			
+				let location = await Location.getCurrentPositionAsync({});
+				if(typeof location !== 'undefined') {
+					// Set current location
+					setCurrentLocation({
+					latitude: location.coords.latitude,
+					longitude: location.coords.longitude
+					});
+				}
+			}})()};
 
-      let location = await Location.getCurrentPositionAsync({});
-      if (location) {
-        console.log(location);
-        setCurrentLocation({
-          latitude: location.coords.latitude,
-          longitude: location.coords.longitude,
-        });
-      }
-    };
-  });
-  return (
-    <View style={styles.container}>
-      <MapView
-        style={styles.map}
-        Region={{
-          latitude: currentLocation.latitude,
-          longitude: currentLocation.longitude,
-          latitudeDelta: 0.0922,
-          longitudeDelta: 0.0421,
-        }}
-        showsUserLocation={true}
-        followsUserLocation={true}
-      >
-        {isActive ? <Pins></Pins> : null}
-      </MapView>
-      <Callout>
-        <TouchableOpacity
-          style={[styles.menuButton, themeContainerStyle]}
-          onPress={() => {
-            setIsActive(!isActive);
-          }}
-        >
-          {isActive ? (
-            colorTheme === "light" ? (
-              <Ionicons
-                name={"close"}
-                size={24}
-                color={"#3D3D3D"}
-              ></Ionicons>
-            ) : (
-              <Ionicons name={"close"} size={24} color={"#fff"}></Ionicons>
-            )
-          ) : colorTheme === "light" ? (
-            <Ionicons name={"list"} size={24} color={"#3D3D3D"}></Ionicons>
-          ) : (
-            <Ionicons name={"list"} size={24} color={"#fff"}></Ionicons>
-          )}
-        </TouchableOpacity>
-      </Callout>
-    </View>
-  );
-}
+			// Get store data from server
+			const getStoreData=()=>{
+				fetch('https://stud.hosted.hr.nl/1019785/stores.json'
+				,{
+				  headers:{ 
+					'Content-Type': 'application/json',
+					'Accept': 'application/json'
+				   }
+				}
+				)
+				.then(function(response){
+					return response.json();
+				})
+				.then(function(myJson) {
+					setStores(myJson);				});
+			}
+
+			useEffect(() => {
+				getStoreData();
+			  }, []);
+
+	return (
+			<View style={styles.container}>
+			{/* Mapview */}
+			<MapView 
+				style={styles.map}
+				region={{
+					latitude: currentLocation.latitude,
+					longitude: currentLocation.longitude,
+					latitudeDelta: 0.0922,
+					longitudeDelta: 0.0421,
+				}}
+				showsUserLocation={true}
+				>
+				{/* Markers/Pins */}
+				{stores.map((prop, key) => {
+					return (
+						<Marker  
+							key={key}
+							coordinate={{latitude: parseFloat(prop.latitude), longitude: parseFloat(prop.longitude)}}
+							title= {prop.name}
+							description={prop.telephone}
+						>
+						<Image source={require('../../assets/pin.png')} style={{height: 35, width:35 }} />
+						{/* Marker information */}
+						<Callout tooltip>
+							<View>
+								<View style={styles.bubble}>
+									<Text style={styles.name}>{prop.name}</Text>
+									<Text>Address: {prop.address}</Text>
+									<Text>Zip code: {prop.zipcode}</Text>
+									<Text>Telephone: {prop.telephone}</Text>			
+									<Text>{prop.website ? "Website: " + prop.website : "No website available"}</Text>	
+								</View>
+								<View style={styles.arrowBorder}/>
+								<View style={styles.arrow}/>
+							</View>
+						</Callout>
+					  </Marker>
+					);
+				})}
+				</MapView>
+			</View>
+	);
+};
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "flex-start",
-    justifyContent: "flex-start",
-  },
-  map: {
-    width: Dimensions.get("window").width,
-    height: Dimensions.get("window").height,
-  },
-  menuButton: {
-    padding: 5,
-    borderRadius: 10,
-    margin: 10,
-  },
-  lightContainer: {
-    backgroundColor: "#fff",
-  },
-  darkContainer: {
-    backgroundColor: "#3D3D3D",
-  },
-});
+	container: {
+	  flex: 1,
+	  backgroundColor: '#fff',
+	  alignItems: 'center',
+	  justifyContent: 'center',
+	},
+	map: {
+	  width: Dimensions.get('window').width,
+	  height: Dimensions.get('window').height,
+	},
+	bubble: {
+		flexDirection: 'column',
+		alignSelf: 'flex-start',
+		backgroundColor: '#fff',
+		borderRadius: 6,
+		borderColor: "#ccc",
+		borderWidth: 0.5,
+		padding: 15,
+		width: 250,
+	},
+	arrow: {
+		backgroundColor: 'transparent',
+		borderColor: 'transparent',
+		borderTopColor: '#fff',
+		borderWidth: 16,
+		alignSelf: 'center',
+		marginTop: -32,
+	},
+	arrowBorder: {
+		backgroundColor: 'transparent',
+		borderColor: 'transparent',
+		borderTopColor: '#007a87',
+		borderWidth: 16,
+		alignSelf: 'center',
+		marginTop: -0.5,
+	},
+	name: {
+		fontSize: 20,
+		marginBottom: 5, 
+		fontWeight: 'bold'
+	}
+  });
 
-export default MapScreen;
+export default Map;
